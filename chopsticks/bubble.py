@@ -1,4 +1,5 @@
 from __future__ import print_function
+import logging
 import sys
 sys.path = [p for p in sys.path if p.startswith('/')]
 __name__ = '__bubble__'
@@ -330,11 +331,14 @@ def handle_end_put(req_id, sha1sum):
     )
 
 
-def handle_start(req_id, host, path, depthlimit):
+def handle_start(req_id, host, path, depthlimit, log_config):
     sys._chopsticks_host = force_str(host)
     sys._chopsticks_path = [force_str(p) for p in path]
     sys._chopsticks_depthlimit = depthlimit
     send_msg(OP_RET, req_id, {'ret': pickle.HIGHEST_PROTOCOL})
+
+    if log_config:
+        logging.basicConfig(stream=sys.stderr, **log_config)
 
 
 HEADER = struct.Struct('!LLbb')
