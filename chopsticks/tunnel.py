@@ -753,14 +753,17 @@ class SSHTunnel(SubprocessTunnel):
                  not ``ssh`` directly as the root user.
 
     """
-    def __init__(self, host, user=None, sudo=False):
+    def __init__(self, host, user=None, sudo=False, host_check=True):
         self.host = host
         self.user = user
         self.sudo = sudo
+        self.host_check = host_check
         super(SubprocessTunnel, self).__init__()
 
     def cmd_args(self):
         args = ['ssh', '-o', 'PasswordAuthentication=no']
+        if not self.host_check:
+            args += ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no']
         if self.user:
             args.extend(['-l', self.user])
         args.append(self.host)

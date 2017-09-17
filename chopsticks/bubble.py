@@ -1,6 +1,7 @@
 from __future__ import print_function
 import logging
 import sys
+import logging
 sys.path = [p for p in sys.path if p.startswith('/')]
 __name__ = '__bubble__'
 sys.modules[__name__] = sys.modules.pop('__main__')
@@ -331,6 +332,12 @@ def handle_end_put(req_id, sha1sum):
     )
 
 
+class TunnelHandler(logging.Handler):
+    def emit(self, record):
+        log_entry = self.format(record)
+        debug(log_entry.strip())
+
+
 def handle_start(req_id, host, path, depthlimit, log_config):
     sys._chopsticks_host = force_str(host)
     sys._chopsticks_path = [force_str(p) for p in path]
@@ -338,7 +345,21 @@ def handle_start(req_id, host, path, depthlimit, log_config):
     send_msg(OP_RET, req_id, {'ret': pickle.HIGHEST_PROTOCOL})
 
     if log_config:
-        logging.basicConfig(stream=sys.stderr, **log_config)
+        th = TunnelHandler()
+        level = log_config.get('level', logging.INFO)
+        if 'level' in log_config:
+            th.setLevel(level)
+            logging.root.setLevel(level)
+        if 'format' in log_config:
+            formatter = logging.Formatter(log_config['format'])
+            th.setFormatter(formatter)
+        logging.root.addHandler(th)
+
+    logging.getLogger("sh.command.process.streamreader").setLevel(logging.ERROR)
+    logging.getLogger("sh.stream_bufferer").setLevel(logging.ERROR)
+    logging.getLogger("sh.command.process").setLevel(logging.ERROR)
+    logging.getLogger("sh.command").setLevel(logging.ERROR)
+    logging.getLogger("sh.streamreader").setLevel(logging.ERROR)
 
 
 HEADER = struct.Struct('!LLbb')
