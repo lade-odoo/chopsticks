@@ -355,11 +355,7 @@ def handle_start(req_id, host, path, depthlimit, log_config):
             th.setFormatter(formatter)
         logging.root.addHandler(th)
 
-    logging.getLogger("sh.command.process.streamreader").setLevel(logging.ERROR)
-    logging.getLogger("sh.stream_bufferer").setLevel(logging.ERROR)
-    logging.getLogger("sh.command.process").setLevel(logging.ERROR)
-    logging.getLogger("sh.command").setLevel(logging.ERROR)
-    logging.getLogger("sh.streamreader").setLevel(logging.ERROR)
+    logging.getLogger("sh").setLevel(logging.ERROR)
 
 
 HEADER = struct.Struct('!LLbb')
