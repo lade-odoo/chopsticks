@@ -570,7 +570,8 @@ class SubprocessTunnel(PipeTunnel):
 
     #: These arguments are used for bootstrapping Python into out remote agent
     PYTHON_ARGS = [
-        '-usS',
+        # '-usS',
+        '-u',
         '-c',
         (
             'import sys, os; '
