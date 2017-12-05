@@ -356,6 +356,8 @@ def handle_start(req_id, host, path, depthlimit, log_config):
         logging.root.addHandler(th)
 
     logging.getLogger("sh").setLevel(logging.ERROR)
+    logging.getLogger("requests").setLevel(logging.ERROR)
+    logging.getLogger("urllib3").setLevel(logging.ERROR)
 
 
 HEADER = struct.Struct('!LLbb')
