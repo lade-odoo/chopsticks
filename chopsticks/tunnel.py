@@ -555,8 +555,8 @@ class PipeTunnel(BaseTunnel):
         self.proc.kill()
         self._warn('Timeout expired waiting for pipe to close')
 
-    def __del__(self):
-        self.close()
+    # def __del__(self):
+    #     self.close()
 
     def __enter__(self):
         return self
