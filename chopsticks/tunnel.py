@@ -790,7 +790,8 @@ class SSHTunnel(SubprocessTunnel):
         super(SubprocessTunnel, self).__init__()
 
     def cmd_args(self):
-        args = ['ssh', '-o', 'PasswordAuthentication=no']
+        # args = ['ssh', '-o', 'PasswordAuthentication=no']
+        args = ['ssh', '-o', 'PasswordAuthentication=no', '-A']  # -A temporarily added, TODO: make it clean
         if not self.host_check:
             args += ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no']
         if self.user:
