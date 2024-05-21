@@ -65,7 +65,7 @@ done = object()
 running = True
 local_imports = False
 
-Imp = namedtuple('Imp', 'exists is_pkg file source')
+Imp = namedtuple('Imp', 'exists is_pkg file source variables')
 PREFIX = 'chopsticks://'
 SITE_PACKAGES = site.getsitepackages() + [site.getusersitepackages()]
 
@@ -143,6 +143,7 @@ class Loader:
         mod = sys.modules.setdefault(modname, imp.new_module(modname))
         mod.__file__ = PREFIX + m.file
         mod.__loader__ = self
+        mod.__dict__.update(m.variables or {})
         if m.is_pkg:
             modpath = PREFIX + m.file.rsplit('/', 1)[0] + '/'
             mod.__path__ = [modpath]
@@ -253,8 +254,8 @@ def do_call(req_id, callable, args=(), kwargs={}):
     )
 
 
-def handle_imp(req_id, mod, exists, is_pkg, file, source):
-    Loader.on_receive(mod, Imp(exists, is_pkg, file, source))
+def handle_imp(req_id, mod, exists, is_pkg, file, source, variables):
+    Loader.on_receive(mod, Imp(exists, is_pkg, file, source, variables))
 
 
 active_puts = {}
